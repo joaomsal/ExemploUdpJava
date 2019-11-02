@@ -1,16 +1,24 @@
 package br.ufs.dcomp.ExemploUdpJava;
 
 import java.net.*;
+	
+import java.util.Scanner;
 
 public class AppUDP1 {
 
     public static void main(String[] args) throws SocketException {
         try{
+            int i = 0 ;
+            
+            while(i < 5){
+            
             System.out.print("[ Alocando porta UDP      ..................  ");
     	    DatagramSocket socket = new DatagramSocket(10000);
             System.out.println("[OK] ]");
             
-            String msg = "Olá!!!";
+            Scanner scan = new Scanner(System.in);
+            System.out.println("[DIGITE UMA MENSAGEM :]");
+            String msg = scan.nextLine();
             
             byte[] msg_buf = msg.getBytes();
             int msg_size = msg_buf.length;
@@ -24,6 +32,28 @@ public class AppUDP1 {
             System.out.print("[ Enviando datagrama UDP  ..................  ");
             socket.send(pack);
             System.out.println("[OK] ]");
+            
+            //------------------------------------------
+            System.out.print("[ Alocando porta UDP                  ..................  ");
+            System.out.println("[OK] ]");
+
+            byte[] buf = new byte[20];
+            DatagramPacket pack2 = new DatagramPacket(buf, buf.length);
+
+            System.out.print("[ Aguardando recebimento de mensagem  ..................  ");
+            socket.receive(pack2);
+            System.out.println("[OK] ]");
+            
+            byte[] received_data = pack2.getData();
+            String received_msg = new String(received_data); 
+            InetAddress origin_address = pack2.getAddress();
+            int origin_port = pack2.getPort();
+            
+            System.out.println("  Mensagem:             "+received_msg);
+            System.out.println("  Endereço de origem:   "+origin_address.getHostAddress());
+            System.out.println("  Porta de origem:      "+origin_port);
+            i++;
+            }
 
         } catch (Exception e){
             System.out.println(e.getMessage());
